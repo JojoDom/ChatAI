@@ -45,6 +45,7 @@ dependencies:
   auth_state_manager: ^0.2.1
   dash_chat_2: ^0.0.19
   chat_gpt_sdk: ^2.1.1
+  firebase_database: ^10.3.8
 
 dev_dependencies:
   flutter_test:
