@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 
 class UserController {
+  static User? user = FirebaseAuth.instance.currentUser;
   static Future<User?> loginWithGoogle() async {
     final googleAccount = await GoogleSignIn().signIn();
     final googleAuth = await googleAccount?.authentication;
@@ -20,5 +21,10 @@ class UserController {
     }
 
     return userCredential.user;
+  }
+
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
   }
 }

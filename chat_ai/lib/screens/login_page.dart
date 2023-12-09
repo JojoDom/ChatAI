@@ -1,4 +1,3 @@
-import 'package:auth_state_manager/auth_state_manager.dart';
 import 'package:chat_ai/controllers/user_controller.dart';
 import 'package:chat_ai/screens/welcome_page.dart';
 import 'package:chat_ai/widgets/custom_button.dart';
@@ -82,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                           Logger().i(e);
                         }
                       },
-                      image: const Icon(Icons.mail),
+                      image: Image.asset('assets/images/google.png'),
                       text: 'Sign in with Google',
                       borderColor: Colors.blue,
                       isBusy: isLoading,
