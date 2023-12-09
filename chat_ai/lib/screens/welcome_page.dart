@@ -1,6 +1,5 @@
 import 'package:chat_ai/screens/chat_screen.dart';
 import 'package:chat_ai/widgets/custom_button.dart';
-import 'package:chat_ai/widgets/image_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
