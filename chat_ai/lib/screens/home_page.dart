@@ -46,17 +46,27 @@ class _HomePageState extends State<HomePage> {
                     ),
                     CustomButton(
                       onTap: () {},
-                      image: SvgPicture.asset('assets/images/welcome.jpg'),
+                      image: Icon(Icons.mail),
                       text: 'Sign in with Google',
                       borderColor: Colors.blue,
                       isBusy: false,
                     ),
+                   const SizedBox(height: 10),
                     CustomButton(
                     onTap: (){}, 
                     textColor: Colors.white,
-                    buttonColor: Colors.red,
+                    buttonColor: const Color.fromARGB(255, 209, 138, 132),
                     image: const Icon(Icons.email_outlined, color: Colors.white,), 
-                    text: 'Login with mail', isBusy: false)
+                    text: 'Login with mail', isBusy: false),
+
+                    CustomButton(
+                    onTap: (){}, 
+                    image: const Icon(Icons.mail), 
+                    text: 'Sign Up',
+                    textColor: Colors.white,
+                    buttonColor: Colors.transparent,
+                    borderColor: Colors.white, 
+                    isBusy: false)
                   ],
                 ),
               ),
