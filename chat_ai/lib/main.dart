@@ -1,5 +1,5 @@
 import 'package:chat_ai/firebase_options.dart';
-import 'package:chat_ai/screens/home_page.dart';
+import 'package:chat_ai/screens/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'ChatAI',
       theme: Themes.lightTheme,
       darkTheme: Themes.darkTheme,
-      home: const HomePage(),
+      home: const LoginPage(),
     );
   }
 }

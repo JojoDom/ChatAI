@@ -41,6 +41,7 @@ dependencies:
   google_sign_in: ^6.1.6
   get: ^4.6.5
   flutter_svg: ^2.0.5
+  logger: ^2.0.2+1
 
 dev_dependencies:
   flutter_test:
