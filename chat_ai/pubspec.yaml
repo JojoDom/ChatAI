@@ -43,7 +43,6 @@ dependencies:
   flutter_svg: ^2.0.5
   logger: ^2.0.2+1
   auth_state_manager: ^0.2.1
-  cached_network_image: ^3.2.3
   dash_chat_2: ^0.0.19
   chat_gpt_sdk: ^2.1.1
 

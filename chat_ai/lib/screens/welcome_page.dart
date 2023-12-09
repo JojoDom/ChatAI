@@ -50,7 +50,6 @@ class _WelcomeState extends State<Welcome> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          ImageBuilder(imageUrl: widget.imageUrl),
                           Container(
                               constraints: BoxConstraints(
                                   maxWidth:
