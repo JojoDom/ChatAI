@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>GIDServerClientID</key>
+    <string>302601020872-h87nhvkfn36e7990gn0i7he31omee5de.apps.googleusercontent.com</string>
 	<key>CFBundleDisplayName</key>
 	<string>Chat Ai</string>
 	<key>CFBundleExecutable</key>
@@ -28,6 +30,17 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.302601020872-h87nhvkfn36e7990gn0i7he31omee5de</string>
+			</array>
+		</dict>
+	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
