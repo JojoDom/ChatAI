@@ -42,6 +42,7 @@ dependencies:
   get: ^4.6.5
   flutter_svg: ^2.0.5
   logger: ^2.0.2+1
+  auth_state_manager: ^0.2.1
 
 dev_dependencies:
   flutter_test:

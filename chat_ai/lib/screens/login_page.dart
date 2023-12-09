@@ -1,4 +1,6 @@
+import 'package:auth_state_manager/auth_state_manager.dart';
 import 'package:chat_ai/controllers/user_controller.dart';
+import 'package:chat_ai/screens/welcome_page.dart';
 import 'package:chat_ai/widgets/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,14 +52,26 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     CustomButton(
                       onTap: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
                         try {
                           final user = await UserController.loginWithGoogle();
                           if (user != null) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Get.offAll(Welcome(
+                                userName: user.displayName!,
+                                imageUrl: user.photoURL!));
                           } else {
                             Get.defaultDialog(
                                 title: 'Ooops',
                                 middleText:
                                     'Failed to fetch details for this google account. Try again or use a different method to login');
+                          setState(() {
+                              isLoading = false;
+                            });
                           }
                         } on FirebaseAuthException catch (error) {
                           print(error.message);
@@ -70,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                       image: const Icon(Icons.mail),
                       text: 'Sign in with Google',
                       borderColor: Colors.blue,
-                      isBusy: false,
+                      isBusy: isLoading,
                     ),
                     const SizedBox(height: 10),
                     CustomButton(
