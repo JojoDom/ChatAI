@@ -17,7 +17,7 @@ class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 230, 188, 129),
+      backgroundColor: const Color.fromARGB(255, 230, 188, 129),
       body: SafeArea(
           child: Column(
         children: [

@@ -29,7 +29,4 @@ class UserController {
   }
 }
 
-class UserID {
-  static Object userID =
-      const FlutterSecureStorage().read(key: StorageKeys.ST_KEY_USER_ID) ?? '';
-}
+

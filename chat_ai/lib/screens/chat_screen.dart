@@ -48,7 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
                apiController.sendMessage(
                 createdAt: '${DateTime.now()}',
                 title: m.text,
-                userID: UserID.userID.toString(),
+                userID: apiController.userID.value,
                 conversationID: widget.conversationID??'');
             }          
           },

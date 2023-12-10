@@ -1,4 +1,5 @@
 import 'package:chat_ai/controllers/api_controller.dart';
+import 'package:chat_ai/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -41,12 +42,12 @@ class _ChatHistoryState extends State<ChatHistory> {
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'new',
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.deepOrange,
         shape: const CircleBorder(),
         onPressed: () {
-          // Get.to(() => const ChatScreen(
-          //       isNewChat: true,
-          //     ));
+          Get.to(() => const ChatScreen(
+                isNewChat: true,
+              ));
         },
         child: const Icon(Icons.message, color: Colors.white),
       ),

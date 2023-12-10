@@ -30,6 +30,8 @@ class ApiController extends GetxController {
   var conversations = <Conversation>[].obs;
   var conversationsMessages = <ChatMessageLocal>[].obs;
   var messages = <ChatMessage>[].obs;
+  var userID = ''.obs;
+  late ChatUser currentUser;
 
   @override
   void onInit() async {
@@ -41,14 +43,21 @@ class ApiController extends GetxController {
         error: true,
         compact: true,
         maxWidth: 90));
+    await getUserID();
     await getUserConversations();
     super.onInit();
   }
 
-  final ChatUser currentUser = ChatUser(
-      id: UserID.userID.toString(),
-      firstName: UserController.user!.displayName!.split(' ').first,
-      lastName: UserController.user!.displayName!.split(' ').last);
+  getUserID() async {
+    var id = await secureStorage.read(key: StorageKeys.ST_KEY_USER_ID);
+    userID.value = id ?? '';
+
+    currentUser = ChatUser(
+        id: userID.value,
+        firstName: UserController.user!.displayName!.split(' ').first,
+        lastName: UserController.user!.displayName!.split(' ').last);
+  }
+
   final ChatUser chatAI = ChatUser(id: '1', firstName: 'Chat', lastName: 'AI');
   List<mychoice.ChatChoice> stubbedres = <mychoice.ChatChoice>[
     mychoice.ChatChoice(
@@ -115,7 +124,7 @@ class ApiController extends GetxController {
     Map<String, dynamic> body = {
       "createdAt": createdAt,
       "updatedAt": createdAt,
-      "userId": int.parse(UserID.userID.toString()),
+      "userId": int.parse(userID.value),
       "title": title,
       "isFavorite": false
     };
@@ -129,10 +138,10 @@ class ApiController extends GetxController {
         await sendMessage(
             createdAt: createdAt,
             title: title,
-            userID: UserID.userID.toString(),
+            userID: userID.value,
             conversationID: response.conversation.id);
         var m = ChatMessage(
-            user: ChatUser(id: UserID.userID.toString()),
+            user: ChatUser(id: userID.value),
             text: title,
             createdAt: DateTime.parse(createdAt));
         await getChatAIresponse(m, conversationID: response.conversation.id);
@@ -150,7 +159,6 @@ class ApiController extends GetxController {
       update();
     }
   }
-
   sendMessage(
       {required String createdAt,
       required String title,
@@ -171,7 +179,7 @@ class ApiController extends GetxController {
           .then((value) async {
         isCreatingChatMessage(false);
         var m = ChatMessage(
-            user: ChatUser(id: UserID.userID.toString()),
+            user: ChatUser(id: userID),
             text: title,
             createdAt: DateTime.parse(createdAt));
         await getChatAIresponse(m);
