@@ -1,7 +1,6 @@
 import 'package:auth_state_manager/auth_state_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:logger/logger.dart';
 
 class UserController {
   static User? user = FirebaseAuth.instance.currentUser;
@@ -14,12 +13,11 @@ class UserController {
         await FirebaseAuth.instance.signInWithCredential(credential);
     if (googleAuth?.accessToken != null) {
       final isSuccesful =
-          await AuthStateManager.instance.setToken(googleAuth!.accessToken!);
+          await AuthStateManager.instance.setToken(googleAuth?.accessToken??'');
       if (isSuccesful) {
         AuthStateManager.instance.login();
       }
     }
-
     return userCredential.user;
   }
 
@@ -28,3 +26,5 @@ class UserController {
     await GoogleSignIn().signOut();
   }
 }
+
+

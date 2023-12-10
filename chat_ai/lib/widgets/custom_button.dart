@@ -43,7 +43,7 @@ class CustomButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Row(
             children: [
-              IconButton(onPressed: () {}, icon: Image.asset('assets/images/google.png')),
+              IconButton(onPressed: () {}, icon: image),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: Text(

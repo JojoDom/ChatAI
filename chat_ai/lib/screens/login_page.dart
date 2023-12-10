@@ -1,3 +1,4 @@
+import 'package:chat_ai/controllers/auth_controller.dart';
 import 'package:chat_ai/controllers/user_controller.dart';
 import 'package:chat_ai/screens/welcome_page.dart';
 import 'package:chat_ai/widgets/custom_button.dart';
@@ -5,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,6 +17,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool isLoading = false;
+  var authController = Get.put(AuthController());
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,19 +43,28 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top),
+                    Animate(
+                      effects: const [
+                        SlideEffect(
+                            duration: Duration(
+                              milliseconds: 900,
+                            ),
+                            curve: Curves.linear)
+                      ],
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 30),
-                        child: Text('ChatAI',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge!
-                                .copyWith(
-                                    color: Colors.white,
-                                    fontSize: 50,
-                                    fontWeight: FontWeight.w500)),
+                        padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).padding.top),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 30),
+                          child: Text('ChatAI',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .copyWith(
+                                      color: Colors.white,
+                                      fontSize: 50,
+                                      fontWeight: FontWeight.w500)),
+                        ),
                       ),
                     ),
                     CustomButton(
@@ -59,16 +77,18 @@ class _LoginPageState extends State<LoginPage> {
                           if (user != null) {
                             setState(() {
                               isLoading = false;
-                            });
-                            Get.offAll(Welcome(
-                                userName: user.displayName!,
-                                imageUrl: user.photoURL!));
+                            });                           
+                            await authController.userHandOff(
+                                userName: user.displayName ?? '',
+                                email: user.email ?? '',
+                                phoneNumber: user.phoneNumber??'',
+                                imageURL: user.photoURL ?? '');
                           } else {
                             Get.defaultDialog(
                                 title: 'Ooops',
                                 middleText:
                                     'Failed to fetch details for this google account. Try again or use a different method to login');
-                          setState(() {
+                            setState(() {
                               isLoading = false;
                             });
                           }
@@ -79,9 +99,12 @@ class _LoginPageState extends State<LoginPage> {
                                   error.message ?? 'Something went wrong.')));
                         } catch (e) {
                           Logger().i(e);
+                          Logger().f(e);
                         }
                       },
-                      image: Image.asset('assets/images/google.png'),
+                      image: SizedBox(
+                          height: 30,
+                          child: Image.asset('assets/images/google.png')),
                       text: 'Sign in with Google',
                       borderColor: Colors.blue,
                       isBusy: isLoading,
@@ -98,14 +121,6 @@ class _LoginPageState extends State<LoginPage> {
                         text: 'Login with mail',
                         isBusy: false),
                     const SizedBox(height: 10),
-                    CustomButton(
-                        onTap: () {},
-                        image: const Icon(Icons.mail),
-                        text: 'Sign Up',
-                        textColor: Colors.white,
-                        buttonColor: Colors.transparent,
-                        borderColor: Colors.white,
-                        isBusy: false)
                   ],
                 ),
               ),

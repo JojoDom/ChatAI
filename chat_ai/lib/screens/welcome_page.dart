@@ -17,82 +17,45 @@ class _WelcomeState extends State<Welcome> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/welcome_bg.jpg'),
-                      fit: BoxFit.cover)),
-            ),
-            Positioned.fill(
-              child: Container(
-                color: Colors.blueGrey.withOpacity(0.5),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top),
-                      child: Text(
-                        'Hello👋',
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            fontSize: 50,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                              constraints: BoxConstraints(
-                                  maxWidth:
-                                      MediaQuery.of(context).size.width * 0.4),
-                              child: Text(
-                                widget.userName,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white),
-                              )),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      'Welcome to ChatAI!',
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white),
-                    ),
-                    const Text(
-                      'Unleash the power of AI in your chats! Ready for smart and fun conversations? Let\'s ChatAI!',
-                      textAlign: TextAlign.center,
-                    ),
-                    CustomButton(
-                        onTap: () {
-                          Get.offAll(const ChatScreen());
-                        },
-                        image: const Icon(Icons.chat),
-                        text: 'Start chatting',
-                        textColor: Colors.white,
-                        buttonColor: Colors.blueGrey,
-                        isBusy: false)
-                  ],
+          child: Column(
+        children: [
+          Stack(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.5,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/images/welcome_bg.jpg'),
+                        fit: BoxFit.cover),
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(50),
+                        bottomRight: Radius.circular(50))),
+              ),
+              Positioned.fill(
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  decoration: BoxDecoration(
+                      color: Colors.blueGrey.withOpacity(0.3),
+                      borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(50),
+                          bottomRight: Radius.circular(50))),
+                  child: Column(
+                    children: [
+                      CustomButton(
+                          onTap: () {
+                            Get.offAll(ChatScreen());
+                          },
+                          image: SizedBox(),
+                          text: 'Okay',
+                          isBusy: false)
+                    ],
+                  ),
                 ),
               ),
-            )
-          ],
-        ),
-      ),
+            ],
+          )
+        ],
+      )),
     );
   }
 }
