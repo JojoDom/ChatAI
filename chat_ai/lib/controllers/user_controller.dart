@@ -15,7 +15,7 @@ class UserController {
       final isSuccesful = await AuthStateManager.instance
           .setToken(googleAuth?.accessToken ?? '');
       if (isSuccesful) {
-        AuthStateManager.instance.login();
+       // AuthStateManager.instance.login();
       }
     }
     return userCredential.user;

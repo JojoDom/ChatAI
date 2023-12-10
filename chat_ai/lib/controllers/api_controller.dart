@@ -4,12 +4,8 @@ import 'package:chat_ai/models/new_conversation.dart';
 import 'package:chat_ai/models/user_conversations.dart';
 import 'package:chat_ai/utils/api_strings.dart';
 import 'package:chat_ai/utils/chat_choice.dart' as mychoice;
-import 'package:chat_ai/utils/chat_ctresponse.dart';
-import 'package:chat_ai/utils/constants.dart';
 import 'package:chat_ai/utils/message.dart';
 import 'package:chat_ai/utils/storage_keys.dart';
-import 'package:chat_ai/utils/usage.dart';
-import 'package:chat_gpt_sdk/chat_gpt_sdk.dart' as gpt;
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,6 +28,8 @@ class ApiController extends GetxController {
   var messages = <ChatMessage>[].obs;
   var userID = ''.obs;
   late ChatUser currentUser;
+  var isNewChat = false.obs;
+  var conversationID = ''.obs;
 
   @override
   void onInit() async {
@@ -64,9 +62,6 @@ class ApiController extends GetxController {
         index: 0,
         message:
             Message(role: 'assistant', content: 'This is a test response')),
-    mychoice.ChatChoice(
-        index: 1,
-        message: Message(role: 'assistant', content: 'Christian Barnes'))
   ];
 
   getUserConversations() async {
@@ -105,6 +100,14 @@ class ApiController extends GetxController {
         isFetchingConversationMessages(false);
         var response = ConversationMessages.fromJson(value.data);
         conversationsMessages.value = response.chatMessages;
+        messages.clear();
+        for (var res in conversationsMessages) {         
+          messages.add(ChatMessage(
+              user: ChatUser(id: res.user.id.toString()),
+              text: res.text,
+              createdAt: DateTime.now()));
+        }
+        Logger().i(messages.map((element) => element.toJson()));
       });
     } on dioi.DioException catch (e) {
       isFetchingConversationMessages(false);
@@ -136,21 +139,17 @@ class ApiController extends GetxController {
           .then((value) async {
         isCreatingNewChat(false);
         var response = NewConversation.fromJson(value.data);
+        conversationID.value = response.conversation.id;
+        Logger().i(conversationID);
+        Logger().i('Call this in controller');
         await sendMessage(
             createdAt: createdAt,
             title: title,
             userID: userID.value,
             conversationID: response.conversation.id);
-        var m = ChatMessage(
-            user: ChatUser(id: userID.value),
-            text: title,
-            createdAt: DateTime.parse(createdAt));
-        await getChatAIresponse(m, conversationID: response.conversation.id);
       });
     } on dioi.DioException catch (e) {
       isCreatingNewChat(false);
-      Get.snackbar('Sorry', 'Failed to load chats.',
-          backgroundColor: Colors.white);
       Logger().e(e.message);
       update();
     } catch (e, stackTrace) {
@@ -176,20 +175,13 @@ class ApiController extends GetxController {
     };
     try {
       await dio
-          .post('${ApiStrings.BASE_URL}/${ApiStrings.CREATE_CONVERSATION}',
+          .post('${ApiStrings.BASE_URL}/${ApiStrings.CREATE_CHAT_MESSAGES}',
               data: body)
           .then((value) async {
         isCreatingChatMessage(false);
-        var m = ChatMessage(
-            user: ChatUser(id: userID),
-            text: title,
-            createdAt: DateTime.parse(createdAt));
-        await getChatAIresponse(m);
       });
     } on dioi.DioException catch (e) {
       isCreatingChatMessage(false);
-      Get.snackbar('Sorry', 'Failed to load chats.',
-          backgroundColor: Colors.white);
       Logger().e(e.message);
       update();
     } catch (e, stackTrace) {
@@ -200,51 +192,8 @@ class ApiController extends GetxController {
     }
   }
 
-  Future<void> getChatAIresponse(ChatMessage text,
-      {String? conversationID}) async {
-    final _openAI = gpt.OpenAI.instance.build(
-        token: API_KEY,
-        baseOption: gpt.HttpSetup(
-          receiveTimeout: const Duration(seconds: 8),
-        ),
-        enableLog: true);
-    messages.insert(0, text);
-    List<gpt.Messages> _messageHistory = messages.reversed.map(
-      (m) {
-        if (m.user == currentUser) {
-          return gpt.Messages(role: gpt.Role.user, content: m.text);
-        } else {
-          return gpt.Messages(role: gpt.Role.assistant, content: m.text);
-        }
-      },
-    ).toList();
-    final request = gpt.ChatCompleteText(
-      model: gpt.GptTurbo0301ChatModel(),
-      messages: _messageHistory,
-    );
-    final response = ChatCTResponse(
-        id: 'id',
-        object: 'message',
-        created: 1,
-        choices: stubbedres,
-        usage: Usage(0, 0, 0));
-    //  await _openAI.onChatCompletion(request: request);
-    for (var text in response!.choices) {
-      if (text.message != null) {
-        Logger().i(text.message!.content);
-        messages.insert(
-            0,
-            ChatMessage(
-                user: chatAI,
-                createdAt: DateTime.now(),
-                text: text.message!.content));
-        await sendMessage(
-            createdAt: DateTime.now().toString(),
-            title: text.message!.content,
-            userID: '1',
-            conversationID: conversationID ?? '');
-        Logger().i(messages.map((m) => m.toJson()).toList());
-      }
-    }
-  }
+   deleteChat(){
+     
+   }
+
 }

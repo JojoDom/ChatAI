@@ -51,6 +51,7 @@ dependencies:
   dio: ^5.4.0
   flutter_secure_storage: ^9.0.0
   connection_notifier: ^2.0.1
+  timeago: ^3.6.0
 
 dev_dependencies:
   flutter_test:

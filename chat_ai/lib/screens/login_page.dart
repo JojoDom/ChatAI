@@ -110,16 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                       isBusy: isLoading,
                     ),
                     const SizedBox(height: 10),
-                    CustomButton(
-                        onTap: () {},
-                        textColor: Colors.white,
-                        buttonColor: const Color.fromARGB(255, 209, 138, 132),
-                        image: const Icon(
-                          Icons.email_outlined,
-                          color: Colors.white,
-                        ),
-                        text: 'Login with mail',
-                        isBusy: false),
+                   
                     const SizedBox(height: 10),
                   ],
                 ),
