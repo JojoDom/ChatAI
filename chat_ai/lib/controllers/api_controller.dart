@@ -2,8 +2,6 @@ import 'package:chat_ai/controllers/user_controller.dart';
 import 'package:chat_ai/models/conversation_messages.dart';
 import 'package:chat_ai/models/new_conversation.dart';
 import 'package:chat_ai/models/user_conversations.dart';
-import 'package:chat_ai/models/user_object.dart';
-import 'package:chat_ai/screens/welcome_page.dart';
 import 'package:chat_ai/utils/api_strings.dart';
 import 'package:chat_ai/utils/chat_choice.dart' as mychoice;
 import 'package:chat_ai/utils/chat_ctresponse.dart';
@@ -11,7 +9,6 @@ import 'package:chat_ai/utils/constants.dart';
 import 'package:chat_ai/utils/message.dart';
 import 'package:chat_ai/utils/storage_keys.dart';
 import 'package:chat_ai/utils/usage.dart';
-import 'package:chat_ai/utils/user_singleton.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart' as gpt;
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
@@ -44,11 +41,12 @@ class ApiController extends GetxController {
         error: true,
         compact: true,
         maxWidth: 90));
+    await getUserConversations();
     super.onInit();
   }
 
   final ChatUser currentUser = ChatUser(
-      id: UserSingleton.instance.userID,
+      id: UserID.userID.toString(),
       firstName: UserController.user!.displayName!.split(' ').first,
       lastName: UserController.user!.displayName!.split(' ').last);
   final ChatUser chatAI = ChatUser(id: '1', firstName: 'Chat', lastName: 'AI');
@@ -61,46 +59,6 @@ class ApiController extends GetxController {
         index: 1,
         message: Message(role: 'assistant', content: 'Christian Barnes'))
   ];
-
-  userHandOff(
-      {required String userName,
-      required String email,
-      required String phoneNumber,
-      required String imageURL}) async {
-    isRegisteringUser(true);
-    Map<String, dynamic> body = {
-      "userName": userName,
-      "email": email,
-      "phoneNumber": phoneNumber,
-      "imageUrl": imageURL
-    };
-    try {
-      await dio
-          .post('${ApiStrings.BASE_URL}/${ApiStrings.CREATE_USER}', data: body)
-          .then((value) async {
-        Logger().i(value.data);
-        var response = UserObject.fromJson(value.data);
-        Get.offAll(Welcome(userName: userName, imageUrl: imageURL));
-        Logger().i(response.user.id);
-        UserSingleton.instance.initializeUserValue(response.user.id.toString());
-        await secureStorage.write(
-            key: StorageKeys.ST_KEY_USER_ID, value: '${response.user.id}');
-        await secureStorage.write(
-            key: StorageKeys.ST_USER_OBJECT, value: value.data);
-      });
-    } on dioi.DioException catch (e) {
-      isRegisteringUser(false);
-      Get.snackbar('Sorry', 'Something went wrong. Try logging in again',
-          backgroundColor: Colors.white);
-      Logger().e(e.message);
-      update();
-    } catch (e, stackTrace) {
-      isRegisteringUser(false);
-      Logger().e('Error: $e');
-      Logger().i(stackTrace);
-      update();
-    }
-  }
 
   getUserConversations() async {
     isFetchingConversations(true);
@@ -157,7 +115,7 @@ class ApiController extends GetxController {
     Map<String, dynamic> body = {
       "createdAt": createdAt,
       "updatedAt": createdAt,
-      "userId": int.parse(UserSingleton.instance.userID),
+      "userId": int.parse(UserID.userID.toString()),
       "title": title,
       "isFavorite": false
     };
@@ -171,10 +129,10 @@ class ApiController extends GetxController {
         await sendMessage(
             createdAt: createdAt,
             title: title,
-            userID: UserSingleton.instance.userID,
+            userID: UserID.userID.toString(),
             conversationID: response.conversation.id);
         var m = ChatMessage(
-            user: ChatUser(id: UserSingleton.instance.userID),
+            user: ChatUser(id: UserID.userID.toString()),
             text: title,
             createdAt: DateTime.parse(createdAt));
         await getChatAIresponse(m, conversationID: response.conversation.id);
@@ -213,7 +171,7 @@ class ApiController extends GetxController {
           .then((value) async {
         isCreatingChatMessage(false);
         var m = ChatMessage(
-            user: ChatUser(id: UserSingleton.instance.userID),
+            user: ChatUser(id: UserID.userID.toString()),
             text: title,
             createdAt: DateTime.parse(createdAt));
         await getChatAIresponse(m);

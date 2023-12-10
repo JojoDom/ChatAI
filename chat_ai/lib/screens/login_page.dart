@@ -1,4 +1,4 @@
-import 'package:chat_ai/controllers/api_controller.dart';
+import 'package:chat_ai/controllers/auth_controller.dart';
 import 'package:chat_ai/controllers/user_controller.dart';
 import 'package:chat_ai/widgets/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,10 +16,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool isLoading = false;
-  var authController = Get.put(ApiController());
+  late AuthController authController;
 
   @override
   void initState() {
+    authController = Get.put(AuthController());
     super.initState();
   }
 
@@ -76,11 +77,11 @@ class _LoginPageState extends State<LoginPage> {
                           if (user != null) {
                             setState(() {
                               isLoading = false;
-                            });                           
+                            });
                             await authController.userHandOff(
                                 userName: user.displayName ?? '',
                                 email: user.email ?? '',
-                                phoneNumber: user.phoneNumber??'',
+                                phoneNumber: user.phoneNumber ?? '',
                                 imageURL: user.photoURL ?? '');
                           } else {
                             Get.defaultDialog(
