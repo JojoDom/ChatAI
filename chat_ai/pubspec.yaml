@@ -52,6 +52,9 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   connection_notifier: ^2.0.1
   timeago: ^3.6.0
+  cherry_toast: ^1.6.4
+  assets_audio_player: ^3.1.1
+  draggable_fab: ^0.1.4
 
 dev_dependencies:
   flutter_test:

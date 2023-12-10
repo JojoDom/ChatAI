@@ -4,8 +4,10 @@ import 'package:chat_ai/models/new_conversation.dart';
 import 'package:chat_ai/models/user_conversations.dart';
 import 'package:chat_ai/utils/api_strings.dart';
 import 'package:chat_ai/utils/chat_choice.dart' as mychoice;
+import 'package:chat_ai/utils/helper.dart';
 import 'package:chat_ai/utils/message.dart';
 import 'package:chat_ai/utils/storage_keys.dart';
+import 'package:cherry_toast/resources/arrays.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,6 +15,7 @@ import 'package:logger/logger.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:dio/dio.dart' as dioi;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:cherry_toast/cherry_toast.dart';
 
 class ApiController extends GetxController {
   final dio = dioi.Dio();
@@ -30,6 +33,7 @@ class ApiController extends GetxController {
   late ChatUser currentUser;
   var isNewChat = false.obs;
   var conversationID = ''.obs;
+  var isDeletingChat = false.obs;
 
   @override
   void onInit() async {
@@ -101,7 +105,7 @@ class ApiController extends GetxController {
         var response = ConversationMessages.fromJson(value.data);
         conversationsMessages.value = response.chatMessages;
         messages.clear();
-        for (var res in conversationsMessages) {         
+        for (var res in conversationsMessages) {
           messages.add(ChatMessage(
               user: ChatUser(id: res.user.id.toString()),
               text: res.text,
@@ -192,8 +196,69 @@ class ApiController extends GetxController {
     }
   }
 
-   deleteChat(){
-     
-   }
+  deleteChat(String conversationID) async {
+    isDeletingChat(true);
+    try {
+      await dio
+          .delete('${ApiStrings.BASE_URL}/conversations/$conversationID')
+          .then((value) async {
+        isDeletingChat(false);
+         Helper().playSound('assets/audios/post.wav');
+        CherryToast.success(
+                title: const Text('Conversation Deleted'),
+                displayTitle: true,
+                animationType: AnimationType.fromTop,
+                animationDuration: const Duration(milliseconds: 1000),
+                autoDismiss: true)
+            .show(Get.context!);
+        await getUserConversations();
+      });
+    } on dioi.DioException catch (e) {
+      isDeletingChat(false);
+      Get.snackbar('', 'Failed to delete conversation',
+          backgroundColor: Colors.red);
+      Logger().e(e.message);
+      update();
+    } catch (e, stackTrace) {
+      isDeletingChat(false);
+      Get.snackbar('', 'Failed to delete conversation',
+          backgroundColor: Colors.red);
+      Logger().e('Error: $e');
+      Logger().i(stackTrace);
+      update();
+    }
+  }
 
+  favoriteChat(String conversationID, bool isFavorite) async {
+    isDeletingChat(true);
+    try {
+      await dio
+          .put('${ApiStrings.BASE_URL}/conversations/$conversationID', data: {"isFavorite" : isFavorite})
+          .then((value) async {
+        isDeletingChat(false);
+         Helper().playSound('assets/audios/post.wav');
+        CherryToast.success(
+                title: const Text('Added to favorites'),
+                displayTitle: true,
+                animationType: AnimationType.fromTop,
+                animationDuration: const Duration(milliseconds: 1000),
+                autoDismiss: true)
+            .show(Get.context!);
+        await getUserConversations();
+      });
+    } on dioi.DioException catch (e) {
+      isDeletingChat(false);
+      Get.snackbar('', 'Failed to add to favorites',
+          backgroundColor: Colors.red);
+      Logger().e(e.message);
+      update();
+    } catch (e, stackTrace) {
+      isDeletingChat(false);
+      Get.snackbar('', 'Failed to add to favorites',
+          backgroundColor: Colors.red);
+      Logger().e('Error: $e');
+      Logger().i(stackTrace);
+      update();
+    }
+  }
 }

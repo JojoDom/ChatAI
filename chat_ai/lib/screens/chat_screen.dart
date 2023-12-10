@@ -140,7 +140,6 @@ class _ChatScreenState extends State<ChatScreen> {
                     setState(() {
                       _messages.insert(0, m);
                     });
-                    Logger().i(' do not Call this');
                     apiController.sendMessage(
                         createdAt: DateTime.now().toString(),
                         title: m.text,
