@@ -1,3 +1,4 @@
+import 'package:chat_ai/screens/chat_history.dart';
 import 'package:chat_ai/screens/chat_screen.dart';
 import 'package:chat_ai/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class _WelcomeState extends State<Welcome> {
                     children: [
                       CustomButton(
                           onTap: () {
-                            Get.offAll(ChatScreen());
+                            Get.offAll(ChatHistory());
                           },
                           image: SizedBox(),
                           text: 'Okay',

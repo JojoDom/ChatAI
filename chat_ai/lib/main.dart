@@ -1,5 +1,6 @@
 import 'package:auth_state_manager/auth_state_manager.dart';
 import 'package:chat_ai/firebase_options.dart';
+import 'package:chat_ai/screens/chat_history.dart';
 import 'package:chat_ai/screens/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const AuthStateListener(
-        authenticated: LoginPage(),
+        authenticated: ChatHistory(),
          unAuthenticated: LoginPage());
   }
 }

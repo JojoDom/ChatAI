@@ -1,6 +1,5 @@
-import 'package:chat_ai/controllers/auth_controller.dart';
+import 'package:chat_ai/controllers/api_controller.dart';
 import 'package:chat_ai/controllers/user_controller.dart';
-import 'package:chat_ai/screens/welcome_page.dart';
 import 'package:chat_ai/widgets/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +16,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool isLoading = false;
-  var authController = Get.put(AuthController());
+  var authController = Get.put(ApiController());
 
   @override
   void initState() {
