@@ -1,3 +1,4 @@
+import 'package:auth_state_manager/auth_state_manager.dart';
 import 'package:chat_ai/controllers/user_controller.dart';
 import 'package:chat_ai/screens/chat_history.dart';
 import 'package:chat_ai/widgets/custom_button.dart';
@@ -32,11 +33,10 @@ class _WelcomeState extends State<Welcome> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Hello ${UserController.user!.displayName}!',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(
-                    color: Colors.white, fontWeight: FontWeight.w600, fontSize: 20),
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20),
             ),
           ),
           Padding(
@@ -48,21 +48,28 @@ class _WelcomeState extends State<Welcome> {
                   NetworkImage(UserController.user!.photoURL ?? ''),
             ),
           ),
-           Padding(
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-                'My name is ChatAI. Your AI chat buddy.Feel free to ask me any question and I will do my best to assit you.', 
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,),
+              'My name is ChatAI. Your AI chat buddy.Feel free to ask me any question and I will do my best to assit you.',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600),
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       )),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: CustomButton(
-            onTap: (() => Get.offAll(const ChatHistory())),
+            onTap: () {
+              AuthStateManager.instance.login();
+              Get.offAll(const ChatHistory());
+            },
             buttonColor: Colors.white,
-            textColor:  Colors.deepOrange,
+            textColor: Colors.deepOrange,
             image: const Icon(
               Icons.chat,
               color: Colors.orange,

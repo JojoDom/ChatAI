@@ -17,9 +17,14 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  ApiController apiController = Get.put(ApiController());
+ late ApiController apiController;
+  @override
+  void initState() {
+    apiController = Get.put(ApiController());
+    super.initState();
+  }
 
-  
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(

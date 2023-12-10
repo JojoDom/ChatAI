@@ -72,9 +72,10 @@ class ApiController extends GetxController {
   getUserConversations() async {
     isFetchingConversations(true);
     var userID = await secureStorage.read(key: StorageKeys.ST_KEY_USER_ID);
+    int id = int.parse(userID ?? '');
     try {
       await dio
-          .get('${ApiStrings.BASE_URL}/users/$userID/converstions')
+          .get('${ApiStrings.BASE_URL}/users/$id/converstions')
           .then((value) {
         isFetchingConversations(false);
         var response = UserConversations.fromJson(value.data);
@@ -159,6 +160,7 @@ class ApiController extends GetxController {
       update();
     }
   }
+
   sendMessage(
       {required String createdAt,
       required String title,

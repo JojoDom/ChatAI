@@ -11,9 +11,10 @@ class ChatHistory extends StatefulWidget {
 }
 
 class _ChatHistoryState extends State<ChatHistory> {
-  var apiController = Get.put(ApiController());
+  late ApiController apiController;
   @override
   void initState() {
+    apiController = Get.put(ApiController());
     super.initState();
   }
 
