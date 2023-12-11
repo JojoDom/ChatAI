@@ -43,32 +43,58 @@ class _ChatHistoryState extends State<ChatHistory> {
                 fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
           ),
           actions: [
-            UserController.user?.photoURL != null
-                ? Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: Container(
-                    height: 70,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white
+            PopupMenuButton<String>(
+              onSelected: (value) {
+                if (value == 'logout') {
+                  UserController().signOut();
+                }
+              },
+              itemBuilder: ((context) => <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                      value: 'name',
+                      child: Text(
+                        UserController.user?.displayName ?? 'Unknwon',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(3.0),
-                      child: CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(UserController.user?.photoURL ?? ''),
-                          radius: 30.0,
-                          
-                        ),
+                    PopupMenuItem<String>(
+                      value: 'logout',
+                      child: Row(
+                        children: [
+                          Text(
+                            'Log out',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Iconsax.logout),
+                          )
+                        ],
+                      ),
+                    ),
+                  ]),
+              child: Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: Container(
+                  height: 70,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.white),
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: CircleAvatar(
+                      backgroundImage:
+                          NetworkImage(UserController.user?.photoURL ?? ''),
+                      radius: 30.0,
                     ),
                   ),
-                )
-                : Text('')
+                ),
+              ),
+            )
           ],
         ),
         body: Obx(
           () => Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
               child: apiController.isFetchingConversations.isTrue
                   ? const Center(child: CircularProgressIndicator())
                   : apiController.isFetchingConversations.isFalse &&
@@ -130,6 +156,7 @@ class _ChatHistoryState extends State<ChatHistory> {
                               apiController.favoriteConversations.isEmpty
                                   ? const SizedBox.shrink()
                                   : Container(
+                                    margin: const EdgeInsets.symmetric(horizontal: 10),
                                       decoration: BoxDecoration(
                                           color: const Color.fromARGB(
                                               255, 205, 192, 227),
@@ -344,7 +371,8 @@ class _ChatHistoryState extends State<ChatHistory> {
                                       ))),
                                   separatorBuilder: ((context, index) =>
                                       Container(
-                                        color: Colors.white,
+                                        color: const Color.fromARGB(
+                                              255, 205, 192, 227),
                                         height: 3,
                                       )),
                                   itemCount:
