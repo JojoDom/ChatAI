@@ -213,7 +213,7 @@ final RefreshController refresh =
                                                           apiController
                                                               .favoriteConversations[
                                                                   index]
-                                                              .createdAt,
+                                                              .createdAt,locale: 'en_short'
                                                         ),
                                                         style: const TextStyle(
                                                           fontWeight:
