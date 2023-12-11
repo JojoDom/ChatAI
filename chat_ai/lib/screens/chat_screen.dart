@@ -1,9 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, prefer_final_fields
 
 import 'package:chat_ai/controllers/api_controller.dart';
-import 'package:chat_ai/utils/chat_ctresponse.dart';
 import 'package:chat_ai/utils/message.dart';
-import 'package:chat_ai/utils/usage.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,12 +31,12 @@ class _ChatScreenState extends State<ChatScreen> {
             Message(role: 'assistant', content: 'This is a test response')),
   ];
 
-  // final _openAI = gpt.OpenAI.instance.build(
-  //     token: API_KEY,
-  //     baseOption: gpt.HttpSetup(
-  //       receiveTimeout: const Duration(seconds: 8),
-  //     ),
-  //     enableLog: true);
+  final _openAI = gpt.OpenAI.instance.build(
+      token: API_KEY,
+      baseOption: gpt.HttpSetup(
+        receiveTimeout: const Duration(seconds: 8),
+      ),
+      enableLog: true);
 
   Future<void> getChatAIresponse(ChatMessage text,
       {String? conversationID}) async {
@@ -58,13 +56,14 @@ class _ChatScreenState extends State<ChatScreen> {
       model: gpt.GptTurbo0301ChatModel(),
       messages: _messageHistory,
     );
-    final response = ChatCTResponse(
-        id: 'id',
-        object: 'message',
-        created: 1,
-        choices: stubbedres,
-        usage: Usage(0, 0, 0));
-    //await _openAI.onChatCompletion(request: request);
+    final response =
+    //  ChatCTResponse(
+    //     id: 'id',
+    //     object: 'message',
+    //     created: 1,
+    //     choices: stubbedres,
+    //     usage: Usage(0, 0, 0));
+    await _openAI.onChatCompletion(request: request);
     for (var text in response!.choices) {
       if (text.message != null) {
         Logger().i(text.message!.content);

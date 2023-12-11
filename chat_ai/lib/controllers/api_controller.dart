@@ -276,7 +276,7 @@ class ApiController extends GetxController {
           data: {"isFavorite": isFavorite}).then((value) async {
         Helper().playSound('assets/audios/post.wav');
         CherryToast.success(
-                title: const Text('Added to favorites'),
+                title: const Text('Success'),
                 displayTitle: true,
                 animationType: AnimationType.fromTop,
                 animationDuration: const Duration(milliseconds: 1000),
