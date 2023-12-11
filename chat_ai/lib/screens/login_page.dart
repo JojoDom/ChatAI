@@ -93,7 +93,6 @@ class _LoginPageState extends State<LoginPage> {
                             });
                           }
                         } on FirebaseAuthException catch (error) {
-                          print(error.message);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(
                                   error.message ?? 'Something went wrong.')));
@@ -106,7 +105,6 @@ class _LoginPageState extends State<LoginPage> {
                           height: 30,
                           child: Image.asset('assets/images/google.png')),
                       text: 'Sign in with Google',
-                      borderColor: Colors.blue,
                       isBusy: isLoading,
                     ),
                     const SizedBox(height: 10),

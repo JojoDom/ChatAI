@@ -1,15 +1,16 @@
 import 'dart:convert';
 
 import 'package:chat_ai/models/user_object.dart';
-import 'package:chat_ai/screens/welcome_page.dart';
 import 'package:chat_ai/utils/api_strings.dart';
 import 'package:chat_ai/utils/storage_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:chat_ai/screens/chat_history.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:dio/dio.dart' as dioi;
+import 'package:auth_state_manager/auth_state_manager.dart';
 
 class AuthController extends GetxController {
   final dio = dioi.Dio();
@@ -48,7 +49,8 @@ class AuthController extends GetxController {
           .then((value) async {
         Logger().i(value.data);
         var response = UserObject.fromJson(value.data);
-        Get.offAll(const Welcome());
+         AuthStateManager.instance.login();
+        Get.offAll(const ChatHistory());
         Logger().i(response.user.id);
         await secureStorage.write(
             key: StorageKeys.ST_KEY_USER_ID, value: '${response.user.id}');

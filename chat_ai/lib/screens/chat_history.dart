@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:draggable_fab/draggable_fab.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:iconsax/iconsax.dart';
 
 class ChatHistory extends StatefulWidget {
   const ChatHistory({super.key});
@@ -34,7 +35,6 @@ class _ChatHistoryState extends State<ChatHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor:   Color.fromARGB(255, 233, 228, 222),
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
@@ -43,21 +43,27 @@ class _ChatHistoryState extends State<ChatHistory> {
                 fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
           ),
           actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: IconButton.outlined(
-                  onPressed: () {
-                    UserController().signOut();
-                  },
-                  color: Colors.white,
-                  icon: Text(
-                    'Sign Out',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(color: Colors.white),
-                  )),
-            )
+            UserController.user?.photoURL != null
+                ? Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Container(
+                    height: 70,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(UserController.user?.photoURL ?? ''),
+                          radius: 30.0,
+                          
+                        ),
+                    ),
+                  ),
+                )
+                : Text('')
           ],
         ),
         body: Obx(
@@ -74,7 +80,6 @@ class _ChatHistoryState extends State<ChatHistory> {
                             Center(
                               child: Image.asset(
                                 'assets/images/no_chat.png',
-                                color: const Color.fromARGB(255, 218, 200, 172),
                               ),
                             ),
                             Padding(
@@ -109,7 +114,7 @@ class _ChatHistoryState extends State<ChatHistory> {
                                       child: Align(
                                         alignment: Alignment.centerLeft,
                                         child: Text(
-                                          "Favorites",
+                                          "Pinned",
                                           textAlign: TextAlign.start,
                                           style: Theme.of(context)
                                               .textTheme
@@ -117,8 +122,8 @@ class _ChatHistoryState extends State<ChatHistory> {
                                               .copyWith(
                                                   color:
                                                       const Color(0xFF1A1A1A),
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w600),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500),
                                         ),
                                       ),
                                     ),
@@ -126,7 +131,8 @@ class _ChatHistoryState extends State<ChatHistory> {
                                   ? const SizedBox.shrink()
                                   : Container(
                                       decoration: BoxDecoration(
-                                          color: const Color.fromARGB(255, 228, 209, 179),
+                                          color: const Color.fromARGB(
+                                              255, 205, 192, 227),
                                           borderRadius:
                                               BorderRadius.circular(20)),
                                       child: ListView.separated(
@@ -237,32 +243,21 @@ class _ChatHistoryState extends State<ChatHistory> {
                                           itemCount: apiController
                                               .favoriteConversations.length),
                                     ),
-                              apiController.favoriteConversations.isEmpty
-                                  ? const SizedBox.shrink()
-                                  : Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Container(
-                                        height: 3,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    apiController.recentConversations.isEmpty?
-                                   const SizedBox.shrink():
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12, vertical: 20),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    "Chat History",
+                                    "Recents",
                                     textAlign: TextAlign.start,
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium!
                                         .copyWith(
                                             color: const Color(0xFF1A1A1A),
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500),
                                   ),
                                 ),
                               ),
@@ -279,7 +274,6 @@ class _ChatHistoryState extends State<ChatHistory> {
                                             ))),
                                         child: Container(
                                           decoration: const BoxDecoration(
-                                            
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(18)),
                                           ),
@@ -361,25 +355,17 @@ class _ChatHistoryState extends State<ChatHistory> {
         ),
         floatingActionButton: DraggableFab(
             securityBottom: MediaQuery.of(context).size.height * 0.1,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: RawMaterialButton(
-                fillColor: Theme.of(context).primaryColor,
-                shape: const CircleBorder(),
-                elevation: 5.0,
-                onPressed: (() {
-                  Get.to(() => const ChatScreen(isNewChat: true),
-                      transition: Transition.rightToLeft);
-                }),
-                child: const Padding(
+            child: RawMaterialButton(
+              fillColor: Theme.of(context).primaryColor,
+              shape: const CircleBorder(),
+              elevation: 5.0,
+              onPressed: (() {
+                Get.to(() => const ChatScreen(isNewChat: true),
+                    transition: Transition.rightToLeft);
+              }),
+              child: const Padding(
                   padding: EdgeInsets.all(12),
-                  child: Icon(
-                    Icons.message,
-                    color: Colors.white,
-                    size: 40,
-                  ),
-                ),
-              ),
+                  child: Icon(Iconsax.message_add, color: Colors.white)),
             )));
   }
 }

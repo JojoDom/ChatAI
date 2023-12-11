@@ -33,12 +33,12 @@ class _ChatScreenState extends State<ChatScreen> {
             Message(role: 'assistant', content: 'This is a test response')),
   ];
 
-  final _openAI = gpt.OpenAI.instance.build(
-      token: API_KEY,
-      baseOption: gpt.HttpSetup(
-        receiveTimeout: const Duration(seconds: 8),
-      ),
-      enableLog: true);
+  // final _openAI = gpt.OpenAI.instance.build(
+  //     token: API_KEY,
+  //     baseOption: gpt.HttpSetup(
+  //       receiveTimeout: const Duration(seconds: 8),
+  //     ),
+  //     enableLog: true);
 
   Future<void> getChatAIresponse(ChatMessage text,
       {String? conversationID}) async {
@@ -64,7 +64,7 @@ class _ChatScreenState extends State<ChatScreen> {
         created: 1,
         choices: stubbedres,
         usage: Usage(0, 0, 0));
-    //  await _openAI.onChatCompletion(request: request);
+    //await _openAI.onChatCompletion(request: request);
     for (var text in response!.choices) {
       if (text.message != null) {
         Logger().i(text.message!.content);
@@ -133,30 +133,27 @@ class _ChatScreenState extends State<ChatScreen> {
             : DashChat(
                 currentUser: apiController.currentUser,
                 typingUsers: _typingUsers,
-                messageOptions: const MessageOptions(
-                    containerColor: Color.fromARGB(255, 231, 204, 163),
-                    currentUserContainerColor:
-                        Color.fromARGB(255, 231, 204, 163)),
+                messageOptions: MessageOptions(
+                    containerColor: const Color.fromARGB(255, 205, 192, 227),
+                    currentUserContainerColor: Theme.of(context).primaryColor),
                 onSend: (ChatMessage m) async {
                   if (_messages.isEmpty) {
-                    setState(() {
-                      _messages.insert(0, m);
-                    });
+                    _messages.insert(0, m);
                     await apiController.newConversation(
                         createdAt: DateTime.now().toString(), title: m.text);
-                    getChatAIresponse(m);
+                    await getChatAIresponse(m);
                   } else {
                     setState(() {
                       _messages.insert(0, m);
                     });
-                    apiController.sendMessage(
+                   await apiController.sendMessage(
                         createdAt: DateTime.now().toString(),
                         title: m.text,
                         userID: apiController.userID.value,
                         conversationID: widget.isNewChat
                             ? apiController.conversationID.value
                             : widget.conversationID ?? '');
-                    getChatAIresponse(m);
+                   await getChatAIresponse(m);
                   }
                 },
                 messages: _messages),

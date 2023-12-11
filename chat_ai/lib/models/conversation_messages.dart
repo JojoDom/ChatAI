@@ -61,10 +61,10 @@ class User {
 
     factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
-        userName: json["userName"],
-        email: json["email"],
-        phoneNumber: json["phoneNumber"],
-        imageUrl: json["imageUrl"],
+        userName: json["userName"]??'',
+        email: json["email"]??'',
+        phoneNumber: json["phoneNumber"]??'',
+        imageUrl: json["imageUrl"]??'',
     );
 
     Map<String, dynamic> toJson() => {

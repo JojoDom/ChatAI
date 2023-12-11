@@ -56,6 +56,7 @@ dependencies:
   assets_audio_player: ^3.1.1
   draggable_fab: ^0.1.4
   pull_to_refresh: ^2.0.0
+  iconsax: ^0.0.8
 
 dev_dependencies:
   flutter_test:
@@ -95,12 +96,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

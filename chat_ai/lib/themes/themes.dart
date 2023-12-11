@@ -3,13 +3,13 @@ class Themes {
   static final lightTheme = ThemeData(
     colorScheme: const ColorScheme.light(
       brightness: Brightness.light,
-      primary: Colors.deepOrange,
+      primary: Colors.deepPurple,
     ),
-  ).copyWith(primaryColor:  Colors.deepOrange,
+  ).copyWith(primaryColor:  Colors.deepPurple,
   scaffoldBackgroundColor: const Color(0xFFF2F4F7));
   static final darkTheme = ThemeData(
     colorScheme: const ColorScheme.dark(
       brightness: Brightness.dark,
-       primary: Colors.deepOrange,
-    )).copyWith(primaryColor:  Colors.deepOrange);
+       primary: Colors.deepPurple,
+    )).copyWith(primaryColor:  Colors.deepPurple);
 }
