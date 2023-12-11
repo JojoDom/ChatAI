@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: CustomButton(
                       onTap: () async {
                         setState(() {
