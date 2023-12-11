@@ -35,6 +35,7 @@ class CustomButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        width: MediaQuery.of(context).size.width>600? MediaQuery.of(context).size.width*0.7 :double.infinity,
         decoration: BoxDecoration(
             color: buttonColor ?? Colors.white,
             border: Border.all(color: borderColor ?? Colors.transparent),
@@ -50,7 +51,7 @@ class CustomButton extends StatelessWidget {
                   text,
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                       color: textColor ?? Colors.black),
                 ),
               )

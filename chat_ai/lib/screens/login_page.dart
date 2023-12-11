@@ -1,6 +1,7 @@
 import 'package:chat_ai/controllers/auth_controller.dart';
 import 'package:chat_ai/controllers/user_controller.dart';
 import 'package:chat_ai/widgets/custom_button.dart';
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,47 +28,48 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/welcome.jpg'),
-                      fit: BoxFit.fitHeight)),
-            ),
-            Positioned.fill(
-              child: Container(
-                color: Colors.black.withOpacity(0.3),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Animate(
-                      effects: const [
-                        SlideEffect(
-                            duration: Duration(
-                              milliseconds: 900,
-                            ),
-                            curve: Curves.linear)
-                      ],
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('assets/images/welcome.jpg'),
+                    fit: BoxFit.cover)),
+          ),
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.3),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Animate(
+                    effects: const [
+                      SlideEffect(
+                          duration: Duration(
+                            milliseconds: 900,
+                          ),
+                          curve: Curves.linear)
+                    ],
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top),
                       child: Padding(
-                        padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).padding.top),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 30),
-                          child: Text('ChatAI',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge!
-                                  .copyWith(
-                                      color: Colors.white,
-                                      fontSize: 50,
-                                      fontWeight: FontWeight.w500)),
-                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 30),
+                        child: Text('ChatAI',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge!
+                                .copyWith(
+                                    color: Colors.white,
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.w500)),
                       ),
                     ),
-                    CustomButton(
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CustomButton(
                       onTap: () async {
                         setState(() {
                           isLoading = true;
@@ -84,19 +86,24 @@ class _LoginPageState extends State<LoginPage> {
                                 phoneNumber: user.phoneNumber ?? '',
                                 imageURL: user.photoURL ?? '');
                           } else {
-                            Get.defaultDialog(
-                                title: 'Ooops',
-                                middleText:
-                                    'Failed to fetch details for this google account. Try again or use a different method to login');
+                            CherryToast.error(
+                                title:
+                                    const Text('Failed to authenticate user'));
                             setState(() {
                               isLoading = false;
                             });
                           }
                         } on FirebaseAuthException catch (error) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                  error.message ?? 'Something went wrong.')));
+                          setState(() {
+                            isLoading = false;
+                          });
+                          // ignore: use_build_context_synchronously
+                          CherryToast.error(
+                              title: const Text('Failed to authenticate user'));
                         } catch (e) {
+                          setState(() {
+                            isLoading = false;
+                          });
                           Logger().i(e);
                           Logger().f(e);
                         }
@@ -107,15 +114,12 @@ class _LoginPageState extends State<LoginPage> {
                       text: 'Sign in with Google',
                       isBusy: isLoading,
                     ),
-                    const SizedBox(height: 10),
-                   
-                    const SizedBox(height: 10),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

@@ -80,7 +80,7 @@ final RefreshController refresh =
                     ),
                   ]),
               child: Padding(
-                padding: const EdgeInsets.all(3.0),
+                padding: const EdgeInsets.all(5.0),
                 child: Container(
                   height: 70,
                   decoration: const BoxDecoration(
