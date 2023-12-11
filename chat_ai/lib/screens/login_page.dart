@@ -78,13 +78,16 @@ class _LoginPageState extends State<LoginPage> {
                           final user = await UserController.loginWithGoogle();
                           if (user != null) {
                             setState(() {
-                              isLoading = false;
+                              isLoading = true;
                             });
                             await authController.userHandOff(
                                 userName: user.displayName ?? '',
                                 email: user.email ?? '',
                                 phoneNumber: user.phoneNumber ?? '',
                                 imageURL: user.photoURL ?? '');
+                                 setState(() {
+                              isLoading = false;
+                            });
                           } else {
                             CherryToast.error(
                                 title:

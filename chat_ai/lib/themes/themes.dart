@@ -8,8 +8,9 @@ class Themes {
   ).copyWith(primaryColor:  Colors.deepPurple,
   scaffoldBackgroundColor: const Color(0xFFF2F4F7));
   static final darkTheme = ThemeData(
-    colorScheme: const ColorScheme.dark(
-      brightness: Brightness.dark,
+    colorScheme: const ColorScheme.light(
+      brightness: Brightness.light,
        primary: Colors.deepPurple,
-    )).copyWith(primaryColor:  Colors.deepPurple);
+    )).copyWith(primaryColor:  Colors.deepPurple,
+  scaffoldBackgroundColor: const Color(0xFFF2F4F7));
 }
