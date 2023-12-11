@@ -106,6 +106,7 @@ class _ChatHistoryState extends State<ChatHistory> {
                             Center(
                               child: Image.asset(
                                 'assets/images/no_chat.png',
+                                color:const Color.fromARGB(255, 122, 78, 193) ,
                               ),
                             ),
                             Padding(
@@ -119,7 +120,7 @@ class _ChatHistoryState extends State<ChatHistory> {
                                     .copyWith(
                                         color: const Color(0xFF8F92A1),
                                         fontSize: 14,
-                                        fontWeight: FontWeight.w500),
+                                        fontWeight: FontWeight.w400),
                               ),
                             )
                           ],
@@ -270,13 +271,15 @@ class _ChatHistoryState extends State<ChatHistory> {
                                           itemCount: apiController
                                               .favoriteConversations.length),
                                     ),
+                            apiController.recentConversations.isEmpty?
+                            const SizedBox.square():
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12, vertical: 20),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    "Recents",
+                                    "Chat History",
                                     textAlign: TextAlign.start,
                                     style: Theme.of(context)
                                         .textTheme
@@ -300,9 +303,11 @@ class _ChatHistoryState extends State<ChatHistory> {
                                                   .id,
                                             ))),
                                         child: Container(
+                                          
                                           decoration: const BoxDecoration(
+                                            color: Colors.white,
                                             borderRadius: BorderRadius.all(
-                                                Radius.circular(18)),
+                                                Radius.circular(0)),
                                           ),
                                           child: ListTile(
                                               contentPadding:
@@ -313,7 +318,7 @@ class _ChatHistoryState extends State<ChatHistory> {
                                                   apiController
                                                       .recentConversations[
                                                           index]
-                                                      .createdAt,
+                                                      .createdAt, locale: 'en_short'
                                                 ),
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.w400,
