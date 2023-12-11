@@ -117,7 +117,7 @@ class _ChatHistoryState extends State<ChatHistory> {
                                               .copyWith(
                                                   color:
                                                       const Color(0xFF1A1A1A),
-                                                  fontSize: 14,
+                                                  fontSize: 18,
                                                   fontWeight: FontWeight.w600),
                                         ),
                                       ),
@@ -261,7 +261,7 @@ class _ChatHistoryState extends State<ChatHistory> {
                                         .titleMedium!
                                         .copyWith(
                                             color: const Color(0xFF1A1A1A),
-                                            fontSize: 14,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.w600),
                                   ),
                                 ),

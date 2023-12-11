@@ -1,4 +1,4 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
+// ignore_for_file: no_leading_underscores_for_local_identifiers, prefer_final_fields
 
 import 'package:chat_ai/controllers/api_controller.dart';
 import 'package:chat_ai/utils/chat_ctresponse.dart';
@@ -24,6 +24,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   late ApiController apiController;
   List<ChatMessage> _messages = <ChatMessage>[];
+  List<ChatUser> _typingUsers = <ChatUser>[];
   final ChatUser chatAI = ChatUser(id: '1', firstName: 'Chat', lastName: 'AI');
   List<mychoice.ChatChoice> stubbedres = <mychoice.ChatChoice>[
     mychoice.ChatChoice(
@@ -41,6 +42,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> getChatAIresponse(ChatMessage text,
       {String? conversationID}) async {
+    setState(() {
+      _typingUsers.add(chatAI);
+    });
     List<gpt.Messages> _messageHistory = _messages.reversed.map(
       (m) {
         if (m.user == apiController.currentUser) {
@@ -80,6 +84,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 ? apiController.conversationID.value
                 : widget.conversationID ?? '');
       }
+      setState(() {
+        _typingUsers.remove(chatAI);
+      });
     }
   }
 
@@ -125,9 +132,11 @@ class _ChatScreenState extends State<ChatScreen> {
               )
             : DashChat(
                 currentUser: apiController.currentUser,
+                typingUsers: _typingUsers,
                 messageOptions: const MessageOptions(
-                  containerColor:  Color.fromARGB(255, 231, 204, 163),
-                    currentUserContainerColor:  Color.fromARGB(255, 231, 204, 163)),
+                    containerColor: Color.fromARGB(255, 231, 204, 163),
+                    currentUserContainerColor:
+                        Color.fromARGB(255, 231, 204, 163)),
                 onSend: (ChatMessage m) async {
                   if (_messages.isEmpty) {
                     setState(() {
