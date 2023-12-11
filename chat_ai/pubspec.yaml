@@ -55,6 +55,7 @@ dependencies:
   cherry_toast: ^1.6.4
   assets_audio_player: ^3.1.1
   draggable_fab: ^0.1.4
+  pull_to_refresh: ^2.0.0
 
 dev_dependencies:
   flutter_test:

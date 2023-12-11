@@ -27,6 +27,8 @@ class ApiController extends GetxController {
   var isCreatingNewChat = false.obs;
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   var conversations = <Conversation>[].obs;
+  var favoriteConversations = <Conversation>[].obs;
+  var recentConversations = <Conversation>[].obs;
   var conversationsMessages = <ChatMessageLocal>[].obs;
   var messages = <ChatMessage>[].obs;
   var userID = ''.obs;
@@ -79,6 +81,16 @@ class ApiController extends GetxController {
         isFetchingConversations(false);
         var response = UserConversations.fromJson(value.data);
         conversations.value = response.conversations;
+        favoriteConversations.clear();
+        recentConversations.clear();
+        for (var res in conversations) {
+          if (res.isFavorite) {
+            favoriteConversations.add(res);
+          }
+          if (!res.isFavorite) {
+            recentConversations.add(res);
+          }
+        }
       });
     } on dioi.DioException catch (e) {
       isFetchingConversations(false);
@@ -203,7 +215,7 @@ class ApiController extends GetxController {
           .delete('${ApiStrings.BASE_URL}/conversations/$conversationID')
           .then((value) async {
         isDeletingChat(false);
-         Helper().playSound('assets/audios/post.wav');
+        Helper().playSound('assets/audios/post.wav');
         CherryToast.success(
                 title: const Text('Conversation Deleted'),
                 displayTitle: true,
@@ -232,11 +244,9 @@ class ApiController extends GetxController {
   favoriteChat(String conversationID, bool isFavorite) async {
     isDeletingChat(true);
     try {
-      await dio
-          .put('${ApiStrings.BASE_URL}/conversations/$conversationID', data: {"isFavorite" : isFavorite})
-          .then((value) async {
-        isDeletingChat(false);
-         Helper().playSound('assets/audios/post.wav');
+      await dio.put('${ApiStrings.BASE_URL}/conversations/$conversationID',
+          data: {"isFavorite": isFavorite}).then((value) async {
+        Helper().playSound('assets/audios/post.wav');
         CherryToast.success(
                 title: const Text('Added to favorites'),
                 displayTitle: true,

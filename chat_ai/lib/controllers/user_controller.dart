@@ -1,5 +1,7 @@
 import 'package:auth_state_manager/auth_state_manager.dart';
+import 'package:chat_ai/screens/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class UserController {
@@ -15,7 +17,7 @@ class UserController {
       final isSuccesful = await AuthStateManager.instance
           .setToken(googleAuth?.accessToken ?? '');
       if (isSuccesful) {
-       // AuthStateManager.instance.login();
+        // AuthStateManager.instance.login();
       }
     }
     return userCredential.user;
@@ -24,7 +26,7 @@ class UserController {
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
+    AuthStateManager.instance.logOut();
+    Get.offAll(const LoginPage());
   }
 }
-
-

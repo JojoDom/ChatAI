@@ -96,7 +96,7 @@ class _ChatScreenState extends State<ChatScreen> {
     await apiController.getConversationMessages(
         conversationID: widget.conversationID ?? '');
     setState(() {
-      _messages = apiController.messages.reversed.toList();
+      _messages = apiController.messages.reversed.toSet().toList();
     });
   }
 

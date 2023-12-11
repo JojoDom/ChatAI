@@ -1,8 +1,9 @@
 import 'package:chat_ai/controllers/api_controller.dart';
+import 'package:chat_ai/controllers/user_controller.dart';
 import 'package:chat_ai/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:draggable_fab/draggable_fab.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -15,11 +16,19 @@ class ChatHistory extends StatefulWidget {
 
 class _ChatHistoryState extends State<ChatHistory> {
   late ApiController apiController;
+  final RefreshController refreshChat =
+      RefreshController(initialRefresh: false);
+
   @override
   void initState() {
     apiController = Get.put(ApiController());
     apiController.getUserConversations();
     super.initState();
+  }
+
+  onRefresh() {
+    apiController.getUserConversations();
+    refreshChat.refreshCompleted();
   }
 
   @override
@@ -37,7 +46,9 @@ class _ChatHistoryState extends State<ChatHistory> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: IconButton.outlined(
-                  onPressed: () {},
+                  onPressed: () {
+                    UserController().signOut();
+                  },
                   color: Colors.white,
                   icon: Text(
                     'Sign Out',
@@ -79,100 +90,291 @@ class _ChatHistoryState extends State<ChatHistory> {
                             )
                           ],
                         )
-                      : ListView(
-                        children: [
-                          ListView.separated(
-                            physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              padding: EdgeInsets.zero,
-                              itemBuilder: (((context, index) => InkWell(
-                                    onTap: (() => Get.to(() => ChatScreen(
-                                          isNewChat: false,
-                                          conversationID:
-                                              apiController.conversations[index].id,
-                                        ))),
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.all(Radius.circular(18)),
+                      : SmartRefresher(
+                          enablePullDown: true,
+                          reverse: false,
+                          enablePullUp: false,
+                          controller: refreshChat,
+                          onRefresh: onRefresh,
+                          child: ListView(
+                            children: [
+                              apiController.favoriteConversations.isEmpty
+                                  ? const SizedBox.shrink()
+                                  : Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 20),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "Favorites",
+                                          textAlign: TextAlign.start,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium!
+                                              .copyWith(
+                                                  color:
+                                                      const Color(0xFF1A1A1A),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600),
+                                        ),
                                       ),
-                                      child: ListTile(
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 20),
-                                          title: Text(
-                                            timeago.format(
-                                              apiController
-                                                  .conversations[index].createdAt,
-                                            ),
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.grey,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                          subtitle: Container(
-                                            constraints: const BoxConstraints(
-                                                maxHeight: 150),
-                                            child: Text(
-                                              apiController
-                                                  .conversations[index].title,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 3,
-                                            ),
-                                          ),
-                                          trailing: PopupMenuButton<String>(
-                                            onSelected: (String result) {
-                                              if (result == 'pin') {
-                                                Logger().i('Pin');
-                                              }
-                                              if (result == 'Delete') {
-                                                apiController.deleteChat(
-                                                    apiController
-                                                        .conversations[index].id);
-                                              }
-                                            },
-                                            itemBuilder: ((context) =>
-                                                <PopupMenuEntry<String>>[
-                                                  const PopupMenuItem<String>(
-                                                    value: 'pin',
-                                                    child: Text('Favorite'),
-                                                  ),
-                                                  const PopupMenuItem<String>(
-                                                    value: 'Delete',
-                                                    child:  Text('Delete'),
-                                                  ),
-                                                ]),
-                                          )),
                                     ),
-                                  ))),
-                              separatorBuilder: ((context, index) => Container(
-                                    color: Colors.white,
-                                    height: 3,
-                                  )),
-                              itemCount: apiController.conversations.length),
-                        ],
-                      )),
+                              apiController.favoriteConversations.isEmpty
+                                  ? const SizedBox.shrink()
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              255, 228, 215, 194),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: ListView.separated(
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          padding: EdgeInsets.zero,
+                                          itemBuilder: (((context, index) =>
+                                              InkWell(
+                                                onTap: (() =>
+                                                    Get.to(() => ChatScreen(
+                                                          isNewChat: false,
+                                                          conversationID:
+                                                              apiController
+                                                                  .favoriteConversations[
+                                                                      index]
+                                                                  .id,
+                                                        ))),
+                                                child: Container(
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                18)),
+                                                  ),
+                                                  child: ListTile(
+                                                      contentPadding:
+                                                          const EdgeInsets
+                                                              .symmetric(
+                                                              horizontal: 20),
+                                                      title: Text(
+                                                        timeago.format(
+                                                          apiController
+                                                              .favoriteConversations[
+                                                                  index]
+                                                              .createdAt,
+                                                        ),
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.grey,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                      subtitle: Container(
+                                                        constraints:
+                                                            const BoxConstraints(
+                                                                maxHeight: 150),
+                                                        child: Text(
+                                                          apiController
+                                                              .favoriteConversations[
+                                                                  index]
+                                                              .title,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 3,
+                                                        ),
+                                                      ),
+                                                      trailing: PopupMenuButton<
+                                                          String>(
+                                                        onSelected:
+                                                            (String result) {
+                                                          if (result == 'pin') {
+                                                            apiController.favoriteChat(
+                                                                apiController
+                                                                    .favoriteConversations[
+                                                                        index]
+                                                                    .id,
+                                                                false);
+                                                          }
+                                                          if (result ==
+                                                              'Delete') {
+                                                            apiController.deleteChat(
+                                                                apiController
+                                                                    .favoriteConversations[
+                                                                        index]
+                                                                    .id);
+                                                          }
+                                                        },
+                                                        itemBuilder:
+                                                            ((context) =>
+                                                                <PopupMenuEntry<
+                                                                    String>>[
+                                                                  const PopupMenuItem<
+                                                                      String>(
+                                                                    value:
+                                                                        'pin',
+                                                                    child: Text(
+                                                                        'Unpin'),
+                                                                  ),
+                                                                  const PopupMenuItem<
+                                                                      String>(
+                                                                    value:
+                                                                        'Delete',
+                                                                    child: Text(
+                                                                        'Delete'),
+                                                                  ),
+                                                                ]),
+                                                      )),
+                                                ),
+                                              ))),
+                                          separatorBuilder: ((context, index) =>
+                                              Container(
+                                                color: Colors.white,
+                                                height: 3,
+                                              )),
+                                          itemCount: apiController
+                                              .favoriteConversations.length),
+                                    ),
+                              apiController.favoriteConversations.isEmpty
+                                  ? SizedBox.shrink()
+                                  : Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Container(
+                                        height: 3,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 20),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Chat History",
+                                    textAlign: TextAlign.start,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                            color: const Color(0xFF1A1A1A),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ),
+                              ListView.separated(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  itemBuilder: (((context, index) => InkWell(
+                                        onTap: (() => Get.to(() => ChatScreen(
+                                              isNewChat: false,
+                                              conversationID: apiController
+                                                  .recentConversations[index]
+                                                  .id,
+                                            ))),
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(18)),
+                                          ),
+                                          child: ListTile(
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20),
+                                              title: Text(
+                                                timeago.format(
+                                                  apiController
+                                                      .recentConversations[
+                                                          index]
+                                                      .createdAt,
+                                                ),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.grey,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                              subtitle: Container(
+                                                constraints:
+                                                    const BoxConstraints(
+                                                        maxHeight: 150),
+                                                child: Text(
+                                                  apiController
+                                                      .recentConversations[
+                                                          index]
+                                                      .title,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 3,
+                                                ),
+                                              ),
+                                              trailing: PopupMenuButton<String>(
+                                                onSelected: (String result) {
+                                                  if (result == 'pin') {
+                                                    apiController.favoriteChat(
+                                                        apiController
+                                                            .recentConversations[
+                                                                index]
+                                                            .id,
+                                                        true);
+                                                  }
+                                                  if (result == 'Delete') {
+                                                    apiController.deleteChat(
+                                                        apiController
+                                                            .recentConversations[
+                                                                index]
+                                                            .id);
+                                                  }
+                                                },
+                                                itemBuilder: ((context) =>
+                                                    <PopupMenuEntry<String>>[
+                                                      const PopupMenuItem<
+                                                          String>(
+                                                        value: 'pin',
+                                                        child: Text('Pin Chat'),
+                                                      ),
+                                                      const PopupMenuItem<
+                                                          String>(
+                                                        value: 'Delete',
+                                                        child: Text('Delete'),
+                                                      ),
+                                                    ]),
+                                              )),
+                                        ),
+                                      ))),
+                                  separatorBuilder: ((context, index) =>
+                                      Container(
+                                        color: Colors.white,
+                                        height: 3,
+                                      )),
+                                  itemCount:
+                                      apiController.recentConversations.length),
+                            ],
+                          ),
+                        )),
         ),
         floatingActionButton: DraggableFab(
-           securityBottom: MediaQuery.of(context).size.height * 0.1,
+            securityBottom: MediaQuery.of(context).size.height * 0.1,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: RawMaterialButton(
-                  fillColor: Theme.of(context).primaryColor,
-                  shape: const CircleBorder(),               
-                  elevation: 5.0,
-                  onPressed: (() {
-                    Get.to(() => const ChatScreen(isNewChat: true),
-                     transition: Transition.rightToLeft);
-                  }),
-                  child: const Padding(
-                    padding:  EdgeInsets.all(8.0),
-                    child:  Icon(Icons.message, color: Colors.white,size: 40,),
-                  ),                
+                fillColor: Theme.of(context).primaryColor,
+                shape: const CircleBorder(),
+                elevation: 5.0,
+                onPressed: (() {
+                  Get.to(() => const ChatScreen(isNewChat: true),
+                      transition: Transition.rightToLeft);
+                }),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.message,
+                    color: Colors.white,
+                    size: 40,
                   ),
-            ))
-        
-        );
+                ),
+              ),
+            )));
   }
 }
