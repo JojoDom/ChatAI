@@ -105,42 +105,36 @@ final RefreshController refresh =
                   ? const Center(child: CircularProgressIndicator())
                   : apiController.isFetchingConversations.isFalse &&
                           apiController.conversations.isEmpty
-                      ? SmartRefresher(
-                        controller: refresh,
-                        onRefresh: onPageRefresh,
-                        child: SingleChildScrollView(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(height: MediaQuery.of(context).size.height*0.1,),
-                                Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                                    child: Image.asset(
-                                      'assets/images/no_chat.png',
-                                      color:const Color.fromARGB(255, 122, 78, 193) ,
-                                    ),
-                                  ),
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(height: MediaQuery.of(context).size.height*0.1,),
+                            Center(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: Image.asset(
+                                  'assets/images/no_chat.png',
+                                  color:const Color.fromARGB(255, 122, 78, 193) ,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                                  child: Text(
-                                    'Your chat is empty. To start a new conversaton with ChatAI, tap the chat icon at the bottom right corner',
-                                    textAlign: TextAlign.center,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                            color: const Color(0xFF8F92A1),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400),
-                                  ),
-                                )
-                              ],
+                              ),
                             ),
-                        ),
-                      )
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                              child: Text(
+                                'Your chat is empty. To start a new conversaton with ChatAI, tap the chat icon at the bottom right corner',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        color: const Color(0xFF8F92A1),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                              ),
+                            )
+                          ],
+                        )
                       : SmartRefresher(
                           enablePullDown: true,
                           reverse: false,

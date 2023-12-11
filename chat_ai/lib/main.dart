@@ -6,7 +6,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:connection_notifier/connection_notifier.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 import 'themes/themes.dart';
@@ -30,6 +29,7 @@ class MyApp extends StatelessWidget {
         title: 'ChatAI',
         theme: Themes.lightTheme,
         darkTheme: Themes.darkTheme,
+        debugShowCheckedModeBanner: false,
         home: const Home(),
       ),
     );
