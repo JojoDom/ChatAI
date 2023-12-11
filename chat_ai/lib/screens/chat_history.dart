@@ -34,7 +34,7 @@ class _ChatHistoryState extends State<ChatHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 247, 245, 245),
+        backgroundColor:   Color.fromARGB(255, 233, 228, 222),
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
@@ -63,7 +63,7 @@ class _ChatHistoryState extends State<ChatHistory> {
         body: Obx(
           () => Container(
               margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-              child: apiController.conversations.isEmpty
+              child: apiController.isFetchingConversations.isTrue
                   ? const Center(child: CircularProgressIndicator())
                   : apiController.isFetchingConversations.isFalse &&
                           apiController.conversations.isEmpty
@@ -77,16 +77,19 @@ class _ChatHistoryState extends State<ChatHistory> {
                                 color: const Color.fromARGB(255, 218, 200, 172),
                               ),
                             ),
-                            Text(
-                              'Your chat is empty. To start a new conversaton with ChatAI, tap the chat icon at the bottom right corner',
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      color: const Color(0xFF8F92A1),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Your chat is empty. To start a new conversaton with ChatAI, tap the chat icon at the bottom right corner',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        color: const Color(0xFF8F92A1),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500),
+                              ),
                             )
                           ],
                         )
@@ -123,8 +126,7 @@ class _ChatHistoryState extends State<ChatHistory> {
                                   ? const SizedBox.shrink()
                                   : Container(
                                       decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              255, 228, 215, 194),
+                                          color: const Color.fromARGB(255, 228, 209, 179),
                                           borderRadius:
                                               BorderRadius.circular(20)),
                                       child: ListView.separated(
@@ -236,7 +238,7 @@ class _ChatHistoryState extends State<ChatHistory> {
                                               .favoriteConversations.length),
                                     ),
                               apiController.favoriteConversations.isEmpty
-                                  ? SizedBox.shrink()
+                                  ? const SizedBox.shrink()
                                   : Padding(
                                       padding: const EdgeInsets.only(top: 8.0),
                                       child: Container(
@@ -244,6 +246,8 @@ class _ChatHistoryState extends State<ChatHistory> {
                                         color: Colors.white,
                                       ),
                                     ),
+                                    apiController.recentConversations.isEmpty?
+                                   const SizedBox.shrink():
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12, vertical: 20),
@@ -275,6 +279,7 @@ class _ChatHistoryState extends State<ChatHistory> {
                                             ))),
                                         child: Container(
                                           decoration: const BoxDecoration(
+                                            
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(18)),
                                           ),
@@ -367,7 +372,7 @@ class _ChatHistoryState extends State<ChatHistory> {
                       transition: Transition.rightToLeft);
                 }),
                 child: const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(12),
                   child: Icon(
                     Icons.message,
                     color: Colors.white,

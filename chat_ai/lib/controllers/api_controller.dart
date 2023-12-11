@@ -106,6 +106,38 @@ class ApiController extends GetxController {
     }
   }
 
+  refreshConversations() async {
+    var userID = await secureStorage.read(key: StorageKeys.ST_KEY_USER_ID);
+    int id = int.parse(userID ?? '');
+    try {
+      await dio
+          .get('${ApiStrings.BASE_URL}/users/$id/converstions')
+          .then((value) {
+        var response = UserConversations.fromJson(value.data);
+        conversations.value = response.conversations;
+        favoriteConversations.clear();
+        recentConversations.clear();
+        for (var res in conversations) {
+          if (res.isFavorite) {
+            favoriteConversations.add(res);
+          }
+          if (!res.isFavorite) {
+            recentConversations.add(res);
+          }
+        }
+      });
+    } on dioi.DioException catch (e) {
+      Get.snackbar('Sorry', 'Failed to load chats.',
+          backgroundColor: Colors.white);
+      Logger().e(e.message);
+      update();
+    } catch (e, stackTrace) {
+      Logger().e('Error: $e');
+      Logger().i(stackTrace);
+      update();
+    }
+  }
+
   getConversationMessages({required String conversationID}) async {
     isFetchingConversationMessages(true);
     try {
@@ -158,11 +190,7 @@ class ApiController extends GetxController {
         conversationID.value = response.conversation.id;
         Logger().i(conversationID);
         Logger().i('Call this in controller');
-        await sendMessage(
-            createdAt: createdAt,
-            title: title,
-            userID: userID.value,
-            conversationID: response.conversation.id);
+        getUserConversations();
       });
     } on dioi.DioException catch (e) {
       isCreatingNewChat(false);
@@ -223,7 +251,7 @@ class ApiController extends GetxController {
                 animationDuration: const Duration(milliseconds: 1000),
                 autoDismiss: true)
             .show(Get.context!);
-        await getUserConversations();
+        await refreshConversations();
       });
     } on dioi.DioException catch (e) {
       isDeletingChat(false);
@@ -254,7 +282,7 @@ class ApiController extends GetxController {
                 animationDuration: const Duration(milliseconds: 1000),
                 autoDismiss: true)
             .show(Get.context!);
-        await getUserConversations();
+        await refreshConversations();
       });
     } on dioi.DioException catch (e) {
       isDeletingChat(false);
